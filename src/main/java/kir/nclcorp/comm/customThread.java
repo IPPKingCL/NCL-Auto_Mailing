@@ -20,11 +20,12 @@ public class customThread implements Runnable {
     public customThread(MailService mailService) {
         this.emailService = mailService;
     }
+
     @Override
     public void run() {
         boolean flag = false;
 
-        while(true) {
+        while (true) {
             LocalTime localTime = LocalTime.now();
 
             if (localTime.getHour() == 7) {
@@ -33,8 +34,7 @@ public class customThread implements Runnable {
                     mailThread.start();
                     flag = true;
                 }
-            }
-            else {
+            } else {
                 flag = false;
             }
         }//while end
@@ -42,12 +42,14 @@ public class customThread implements Runnable {
 
 
 }//customThread end
+
 class sendMail implements Runnable {
     MailService emailService;
 
     public sendMail(MailService mailService) {
         this.emailService = mailService;
     }
+
     @Override
     public void run() {
         LocalDate now = LocalDate.now();
@@ -55,11 +57,11 @@ class sendMail implements Runnable {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String date = now.format(formatter);
 
-        List<Map<String,String>> list97 = WebScraping.doScrape(date,"97");
-        List<Map<String,String>> list98 = WebScraping.doScrape(date,"98");
-        List<Map<String,String>> list99 = WebScraping.doScrape(date,"99");
-        List<Map<String,String>> list100 = WebScraping.doScrape(date,"100");
-        List<Map<String,String>> list101 = WebScraping.doScrape(date,"101");
+        List<Map<String, String>> list97 = WebScraping.doScrape(date, "97");
+        List<Map<String, String>> list98 = WebScraping.doScrape(date, "98");
+        List<Map<String, String>> list99 = WebScraping.doScrape(date, "99");
+        List<Map<String, String>> list100 = WebScraping.doScrape(date, "100");
+        List<Map<String, String>> list101 = WebScraping.doScrape(date, "101");
 
         Map<String, Integer> map97 = calcCount(list97);
         Map<String, Integer> map98 = calcCount(list98);
@@ -68,24 +70,36 @@ class sendMail implements Runnable {
         Map<String, Integer> map101 = calcCount(list101);
 
 
-
-
         String content = "";
-        content +="대종로네거리의 "+date+"의 센서 값 수";
+        content += "대종로네거리의 " + date + "의 센서 값 수";
         content += mapToString(map97);
-        content +="\n\n가장교오거리의 "+date+"의 센서 값 수";
+        content += "\n\n가장교오거리의 " + date + "의 센서 값 수";
         content += mapToString(map98);
-        content +="\n\n화암네거리의 "+date+"의 센서 값 수";
+        content += "\n\n화암네거리의 " + date + "의 센서 값 수";
         content += mapToString(map99);
-        content +="\n\n도룡삼거리의 "+date+"의 센서 값 수";
+        content += "\n\n도룡삼거리의 " + date + "의 센서 값 수";
         content += mapToString(map100);
-        content +="\n\n읍내삼거리의 "+date+"의 센서 값 수";
+        content += "\n\n읍내삼거리의 " + date + "의 센서 값 수";
         content += mapToString(map101);
+        content += "<table border=\"1\">" +
+                "<th>테이블</th>" +
+                "<th>만들기</th>" +
+                "<tr>" +
+                "<td>첫번째 칸</td>" +
+                "<td>두번째 칸</td>" +
+                "</tr>" +
+                "<tr>" +
+                "<td>첫번째 칸</td>" +
+                "<td>두번째 칸</td>" +
+                "</tr>" +
+                "</table>";
 
-        emailService.sendSimpleMessage("yoongyu@nclworks.com","대전지역의 "+date+" 센서값",content);
+
+        emailService.sendSimpleMessage("yoongyu@nclworks.com", "대전지역의 " + date + " 센서값", content);
     }
-    public Map<String, Integer> calcCount(List<Map<String,String>> list) {
-        Map<String,Integer> map = new HashMap<>();
+
+    public Map<String, Integer> calcCount(List<Map<String, String>> list) {
+        Map<String, Integer> map = new HashMap<>();
 
         int zero = 0;
         int one = 0;
@@ -99,7 +113,7 @@ class sendMail implements Runnable {
         int nine = 0;
         int ten = 0;
         int eleven = 0;
-        int twelve= 0;
+        int twelve = 0;
         int thirteen = 0;
         int fourteen = 0;
         int fifteen = 0;
@@ -107,37 +121,85 @@ class sendMail implements Runnable {
         int seventeen = 0;
         int eighteen = 0;
         int nineteen = 0;
-        int twenty= 0;
+        int twenty = 0;
         int twentyOne = 0;
         int twentyTwo = 0;
         int twentyThree = 0;
 
-        for (Map<String, String> varMap: list) {
-            switch (varMap.get("센서시간").substring(11,13)) {
-                case "00": zero++; break;
-                case "01": one++; break;
-                case "02": two++; break;
-                case "03": three++; break;
-                case "04": four++; break;
-                case "05": five++; break;
-                case "06": six++; break;
-                case "07": seven++; break;
-                case "08": eight++; break;
-                case "09": nine++; break;
-                case "10": ten++; break;
-                case "11": eleven++; break;
-                case "12": twelve++; break;
-                case "13": thirteen++; break;
-                case "14": fourteen++; break;
-                case "15": fifteen++; break;
-                case "16": sixteen++; break;
-                case "17": seventeen++; break;
-                case "18": eighteen++; break;
-                case "19": nineteen++; break;
-                case "20": twenty++; break;
-                case "21": twentyOne++; break;
-                case "22": twentyTwo++; break;
-                case "23": twentyThree++; break;
+        for (Map<String, String> varMap : list) {
+            switch (varMap.get("센서시간").substring(11, 13)) {
+                case "00":
+                    zero++;
+                    break;
+                case "01":
+                    one++;
+                    break;
+                case "02":
+                    two++;
+                    break;
+                case "03":
+                    three++;
+                    break;
+                case "04":
+                    four++;
+                    break;
+                case "05":
+                    five++;
+                    break;
+                case "06":
+                    six++;
+                    break;
+                case "07":
+                    seven++;
+                    break;
+                case "08":
+                    eight++;
+                    break;
+                case "09":
+                    nine++;
+                    break;
+                case "10":
+                    ten++;
+                    break;
+                case "11":
+                    eleven++;
+                    break;
+                case "12":
+                    twelve++;
+                    break;
+                case "13":
+                    thirteen++;
+                    break;
+                case "14":
+                    fourteen++;
+                    break;
+                case "15":
+                    fifteen++;
+                    break;
+                case "16":
+                    sixteen++;
+                    break;
+                case "17":
+                    seventeen++;
+                    break;
+                case "18":
+                    eighteen++;
+                    break;
+                case "19":
+                    nineteen++;
+                    break;
+                case "20":
+                    twenty++;
+                    break;
+                case "21":
+                    twentyOne++;
+                    break;
+                case "22":
+                    twentyTwo++;
+                    break;
+                case "23":
+                    twentyThree++;
+                    break;
             }
         }
 
@@ -168,36 +230,38 @@ class sendMail implements Runnable {
 
         return map;
     }
+
     public String mapToString(Map<String, Integer> map) {
         String temp = "\n";
         temp +=
-                "00 : " +map.get("00") + "\n" +
-                "01 : " +map.get("01") + "\n" +
-                "02 : " +map.get("02") + "\n" +
-                "03 : " +map.get("03") + "\n" +
-                "04 : " +map.get("04") + "\n" +
-                "05 : " +map.get("05") + "\n" +
-                "06 : " +map.get("06") + "\n" +
-                "07 : " +map.get("07") + "\n" +
-                "08 : " +map.get("08") + "\n" +
-                "09 : " +map.get("09") + "\n" +
-                "10 : " +map.get("10") + "\n" +
-                "11 : " +map.get("11") + "\n" +
-                "12 : " +map.get("12") + "\n" +
-                "13 : " +map.get("13") + "\n" +
-                "14 : " +map.get("14") + "\n" +
-                "15 : " +map.get("15") + "\n" +
-                "16 : " +map.get("16") + "\n" +
-                "17 : " +map.get("17") + "\n" +
-                "18 : " +map.get("18") + "\n" +
-                "19 : " +map.get("19") + "\n" +
-                "20 : " +map.get("20") + "\n" +
-                "21 : " +map.get("21") + "\n" +
-                "22 : " +map.get("22") + "\n" +
-                "23 : " +map.get("23") + "\n";
+                "00 : " + map.get("00") + "\n" +
+                        "01 : " + map.get("01") + "\n" +
+                        "02 : " + map.get("02") + "\n" +
+                        "03 : " + map.get("03") + "\n" +
+                        "04 : " + map.get("04") + "\n" +
+                        "05 : " + map.get("05") + "\n" +
+                        "06 : " + map.get("06") + "\n" +
+                        "07 : " + map.get("07") + "\n" +
+                        "08 : " + map.get("08") + "\n" +
+                        "09 : " + map.get("09") + "\n" +
+                        "10 : " + map.get("10") + "\n" +
+                        "11 : " + map.get("11") + "\n" +
+                        "12 : " + map.get("12") + "\n" +
+                        "13 : " + map.get("13") + "\n" +
+                        "14 : " + map.get("14") + "\n" +
+                        "15 : " + map.get("15") + "\n" +
+                        "16 : " + map.get("16") + "\n" +
+                        "17 : " + map.get("17") + "\n" +
+                        "18 : " + map.get("18") + "\n" +
+                        "19 : " + map.get("19") + "\n" +
+                        "20 : " + map.get("20") + "\n" +
+                        "21 : " + map.get("21") + "\n" +
+                        "22 : " + map.get("22") + "\n" +
+                        "23 : " + map.get("23") + "\n";
         return temp;
     }
 }
+
 @Service
 class MailService {
 

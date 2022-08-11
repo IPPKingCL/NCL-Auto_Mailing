@@ -19,19 +19,11 @@ public class HomeController {
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
-		System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2");
 
 		Date date = new Date();
 		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
-
 		String formattedDate = dateFormat.format(date);
-
 		model.addAttribute("serverTime", formattedDate );
-
-		System.out.println("안녕@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-
-		emailService.sendSimpleMessage("yoongyu@nclworks.com","Test","테스트 이메일입니다.");
-
 
 		return "home";
 	}
