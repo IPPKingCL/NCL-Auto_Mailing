@@ -26,7 +26,7 @@ public class HomeController {
 		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
 		
 		String formattedDate = dateFormat.format(date);
-		
+
 		model.addAttribute("serverTime", formattedDate );
 
 		System.out.println("안녕@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
@@ -34,6 +34,12 @@ public class HomeController {
 		emailService.sendSimpleMessage("qudqud97@nclworks.com","Test","테스트 이메일입니다.");
 
 
+		return "home";
+	}
+	@RequestMapping(value = "/scrap", method = RequestMethod.GET)
+	public String scrap(Locale locale, Model model) {
+		WebScraping wc = new WebScraping();
+		wc.doScrape();
 		return "home";
 	}
 }
