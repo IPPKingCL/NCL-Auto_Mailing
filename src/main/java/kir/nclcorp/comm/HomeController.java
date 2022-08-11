@@ -39,7 +39,7 @@ public class HomeController {
 	@RequestMapping(value = "/scrap", method = RequestMethod.GET)
 	public String scrap(Locale locale, Model model) {
 		WebScraping wc = new WebScraping();
-		wc.doScrape();
+
 		return "home";
 	}
 }
