@@ -1,15 +1,11 @@
 package kir.nclcorp.comm;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
+import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-import javax.inject.Inject;
 import java.time.LocalTime;
-import java.util.Properties;
 
 public class customThread implements Runnable {
     public static customThread instance = new customThread();
@@ -34,9 +30,7 @@ public class customThread implements Runnable {
         }//while end
     }//run end
 
-    public customThread() {
-        EmailService.instance.sendSimpleMessage("hjkwon0814@nclwork.com","Test","테스트 이메일입니다");
-    }
+
 }//customThread end
 class sendMail implements Runnable {
 
@@ -45,12 +39,11 @@ class sendMail implements Runnable {
 
     }
 }
-@Component
-class EmailService {
+@Service
+class MailService {
 
-    public static EmailService instance = new EmailService();
     @Autowired
-    private JavaMailSender emailSender;
+    private MailSender emailSender;
 
     public void sendSimpleMessage(String to, String subject, String text) {
 
