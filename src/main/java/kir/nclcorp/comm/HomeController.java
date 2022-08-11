@@ -1,12 +1,12 @@
 package kir.nclcorp.comm;
 
 import java.text.DateFormat;
-import java.util.Date;
-import java.util.Locale;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -17,6 +17,9 @@ public class HomeController {
 	private customThread ct = customThread.instance;
 	@Autowired
 	MailService emailService;
+
+	@Autowired
+	ExcelService excelService;
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
@@ -40,6 +43,16 @@ public class HomeController {
 	public String scrap(Locale locale, Model model) {
 		WebScraping wc = new WebScraping();
 
+		wc.doScrape("2022-08-08","97");
+		return "home";
+	}
+
+	@RequestMapping(value = "/scrap/exceltest/{date}/{seq}", method = RequestMethod.GET)
+	public String scrapIntoExcel(Model model, @PathVariable("date") String date, @PathVariable("seq") String seq) {
+		WebScraping wc = new WebScraping();
+		List<Map<String, String>> mapList = new ArrayList<>();
+		mapList = wc.doScrape(date,seq);
+		excelService.insertToExcel(mapList);
 		return "home";
 	}
 }
