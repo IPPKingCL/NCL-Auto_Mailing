@@ -57,7 +57,6 @@ public class WebScraping {
 
 
         }
-        System.out.println(list);
         return list;
     }
 }
