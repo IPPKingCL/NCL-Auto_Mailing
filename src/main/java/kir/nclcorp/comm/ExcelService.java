@@ -4,6 +4,7 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -12,29 +13,73 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @Service
 public class ExcelService {
 
-    public void insertToExcel(List<Map<String, String>> ApiData) {
+    public void insertToExcel(Map<String, Integer> ApiData, String date, Integer seq) {
         String filePath = "C:/Users/NCL-NT-0164/Desktop/TEST.xlsx";
         File excel = new File(filePath);
-
+        XSSFSheet sheet;
+        int rowIndex;
+        int finalIndexrow=0;
+        int finalIndexcol=1;
+        XSSFCell cell1;
+        XSSFCell cell2;
+        XSSFCell cell3;
+        XSSFCell cell4;
+        XSSFCell finalcell;
         try {
             FileInputStream inputStream = new FileInputStream(filePath);
             XSSFWorkbook xssfWorkbook = new XSSFWorkbook(inputStream);
-            XSSFSheet xssfSheet = xssfWorkbook.getSheet("대종로네거리");
-            XSSFRow row = xssfSheet.createRow(2);
-            XSSFCell cell = row.createCell(2);
-            cell.setCellValue("안녕");
+            sheet = xssfWorkbook.getSheet("Sheet1");
+            sheet.autoSizeColumn(0);
+
+            rowIndex = findBlankRowIndex(sheet);
+            XSSFRow row;
+
             FileOutputStream fos = new FileOutputStream(filePath);
+
+            for(String key : ApiData.keySet()) {
+                row = sheet.createRow(rowIndex);
+                cell1 = row.createCell(0);
+                cell2 = row.createCell(1);
+                cell3 = row.createCell(2);
+                cell4 = row.createCell(3);
+
+                System.out.println("date = " + date + " rowIndex = " + rowIndex + " seq = " + seq + " key = " + key + " ApiData.get(key) = " + ApiData.get(key));
+                cell1.setCellValue(date);
+                cell2.setCellValue(Integer.parseInt(key));
+                cell3.setCellValue(ApiData.get(key));
+                cell4.setCellValue(seq);
+                rowIndex++;
+            }
+            XSSFRow finalIndexRow = sheet.createRow(finalIndexrow);
+            finalcell = finalIndexRow.createCell(finalIndexcol);
+            finalcell.setCellValue(rowIndex);
             xssfWorkbook.write(fos);
             fos.close();
+
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    public Integer findBlankRowIndex(XSSFSheet sheet) {
+        int finalRow;
+        int rowIndex = 0;
+        int colIndex = 1;
+        Double tempfinalIndex;
+        XSSFRow row = sheet.getRow(rowIndex);
+        XSSFCell cell = row.getCell(colIndex);
+
+        tempfinalIndex = cell.getNumericCellValue();
+        finalRow = tempfinalIndex.intValue();
+
+        return finalRow;
     }
 
 }
