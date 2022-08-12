@@ -26,7 +26,7 @@ public class ExcelService {
         XSSFSheet sheet;
         int rowIndex;
         int finalIndexrow=0;
-        int finalIndexcol=1;
+        int finalIndexcol=2;
         XSSFCell cell1;
         XSSFCell cell2;
         XSSFCell cell3;
@@ -35,8 +35,8 @@ public class ExcelService {
         try {
             FileInputStream inputStream = new FileInputStream(filePath);
             XSSFWorkbook xssfWorkbook = new XSSFWorkbook(inputStream);
-            sheet = xssfWorkbook.getSheet("Sheet1");
-            sheet.autoSizeColumn(0);
+            sheet = xssfWorkbook.getSheet("rawdata");
+            sheet.autoSizeColumn(1);
 
             rowIndex = findBlankRowIndex(sheet);
             XSSFRow row;
@@ -45,10 +45,10 @@ public class ExcelService {
 
             for(String key : ApiData.keySet()) {
                 row = sheet.createRow(rowIndex);
-                cell1 = row.createCell(0);
-                cell2 = row.createCell(1);
-                cell3 = row.createCell(2);
-                cell4 = row.createCell(3);
+                cell1 = row.createCell(1);
+                cell2 = row.createCell(2);
+                cell3 = row.createCell(3);
+                cell4 = row.createCell(4);
 
                 System.out.println("date = " + date + " rowIndex = " + rowIndex + " seq = " + seq + " key = " + key + " ApiData.get(key) = " + ApiData.get(key));
                 cell1.setCellValue(date);
@@ -71,7 +71,7 @@ public class ExcelService {
     public Integer findBlankRowIndex(XSSFSheet sheet) {
         int finalRow;
         int rowIndex = 0;
-        int colIndex = 1;
+        int colIndex = 2;
         Double tempfinalIndex;
         XSSFRow row = sheet.getRow(rowIndex);
         XSSFCell cell = row.getCell(colIndex);
