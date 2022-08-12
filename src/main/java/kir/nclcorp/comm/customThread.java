@@ -128,78 +128,30 @@ class sendMail implements Runnable {
 
         for (Map<String, String> varMap : list) {
             switch (varMap.get("센서시간").substring(11, 13)) {
-                case "00":
-                    zero++;
-                    break;
-                case "01":
-                    one++;
-                    break;
-                case "02":
-                    two++;
-                    break;
-                case "03":
-                    three++;
-                    break;
-                case "04":
-                    four++;
-                    break;
-                case "05":
-                    five++;
-                    break;
-                case "06":
-                    six++;
-                    break;
-                case "07":
-                    seven++;
-                    break;
-                case "08":
-                    eight++;
-                    break;
-                case "09":
-                    nine++;
-                    break;
-                case "10":
-                    ten++;
-                    break;
-                case "11":
-                    eleven++;
-                    break;
-                case "12":
-                    twelve++;
-                    break;
-                case "13":
-                    thirteen++;
-                    break;
-                case "14":
-                    fourteen++;
-                    break;
-                case "15":
-                    fifteen++;
-                    break;
-                case "16":
-                    sixteen++;
-                    break;
-                case "17":
-                    seventeen++;
-                    break;
-                case "18":
-                    eighteen++;
-                    break;
-                case "19":
-                    nineteen++;
-                    break;
-                case "20":
-                    twenty++;
-                    break;
-                case "21":
-                    twentyOne++;
-                    break;
-                case "22":
-                    twentyTwo++;
-                    break;
-                case "23":
-                    twentyThree++;
-                    break;
+                case "00": zero++; break;
+                case "01": one++; break;
+                case "02": two++; break;
+                case "03": three++; break;
+                case "04": four++; break;
+                case "05": five++; break;
+                case "06": six++; break;
+                case "07": seven++; break;
+                case "08": eight++; break;
+                case "09": nine++; break;
+                case "10": ten++; break;
+                case "11": eleven++; break;
+                case "12": twelve++; break;
+                case "13": thirteen++; break;
+                case "14": fourteen++; break;
+                case "15": fifteen++; break;
+                case "16": sixteen++; break;
+                case "17": seventeen++; break;
+                case "18": eighteen++; break;
+                case "19": nineteen++; break;
+                case "20": twenty++; break;
+                case "21": twentyOne++; break;
+                case "22": twentyTwo++; break;
+                case "23": twentyThree++; break;
             }
         }
 
