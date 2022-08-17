@@ -77,7 +77,7 @@ public class HomeController {
 
 		isSuccess = excelService.insertToExcel(dataList,date,seq);
 
-		if(isSuccess.equals("success")) {
+		if(isSuccess.equals("Success")) {
 //			model.addAttribute("성공","data가 정상적으로 입력되었습니다.");
 			System.out.println("성공적으로 데이터 입력되었습니다.");
 		}else {

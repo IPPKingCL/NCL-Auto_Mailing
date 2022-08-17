@@ -47,7 +47,7 @@ public class ExcelService {
             isDateExist = validateInfoAlreadyExist(validSheet,date);
 
             if(isDateExist) {
-                return date;
+                return "Fail";
             }
 
             FileOutputStream fos = new FileOutputStream(filePath);
@@ -79,7 +79,7 @@ public class ExcelService {
             System.out.println(e.getMessage());
         }
 
-        return "success";
+        return "Success";
     }
 
     public Integer findBlankRowIndex(XSSFSheet sheet) { //엑셀 안에 있는 마지막 인덱스 번호를 불러와서 저장된 데이터 이후부터 다시 작성하도록 하는 함수
