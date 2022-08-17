@@ -20,13 +20,16 @@ import java.util.Map;
 @Service
 public class ExcelService {
 
-    public void insertToExcel(Map<String, Integer> ApiData, String date, Integer seq) {
+    public void insertToExcel(List<Map<String, Integer>> ApiData, String date, Integer seq) {
         String filePath = "C:/Users/NCL-NT-0164/Desktop/TEST.xlsx";
         File excel = new File(filePath);
         XSSFSheet sheet;
+        XSSFSheet validSheet;
         int rowIndex;
         int finalIndexrow=0;
         int finalIndexcol=2;
+        List<Integer> startEndIndexList;
+        XSSFCell cell0;
         XSSFCell cell1;
         XSSFCell cell2;
         XSSFCell cell3;
@@ -36,25 +39,29 @@ public class ExcelService {
             FileInputStream inputStream = new FileInputStream(filePath);
             XSSFWorkbook xssfWorkbook = new XSSFWorkbook(inputStream);
             sheet = xssfWorkbook.getSheet("rawdata");
-            sheet.autoSizeColumn(1); // 셀 사이즈 자동 조절
-
+            validSheet = xssfWorkbook.getSheet("Validation");
+//            validateInfoAlreadyExist(validSheet);
             rowIndex = findBlankRowIndex(sheet);
             XSSFRow row;
 
             FileOutputStream fos = new FileOutputStream(filePath);
+            for(int i = 0; i < ApiData.size(); i++) {
+                for (String key : ApiData.get(i).keySet()) {
+                    row = sheet.createRow(rowIndex);
+                    cell0 = row.createCell(0);
+                    cell1 = row.createCell(1);
+                    cell2 = row.createCell(2);
+                    cell3 = row.createCell(3);
+                    cell4 = row.createCell(4); // 셀 생성
 
-            for(String key : ApiData.keySet()) {
-                row = sheet.createRow(rowIndex);
-                cell1 = row.createCell(1);
-                cell2 = row.createCell(2);
-                cell3 = row.createCell(3);
-                cell4 = row.createCell(4); // 셀 생성
-
-                cell1.setCellValue(date);
-                cell2.setCellValue(Integer.parseInt(key));
-                cell3.setCellValue(ApiData.get(key));
-                cell4.setCellValue(seq); // 생선된 셀에 값 입력
-                rowIndex++;
+                    cell0.setCellValue(date + Integer.parseInt(key) + seq);
+                    cell1.setCellValue(date);
+                    cell2.setCellValue(Integer.parseInt(key));
+                    cell3.setCellValue(ApiData.get(i).get(key));
+                    cell4.setCellValue(seq); // 생선된 셀에 값 입력
+                    rowIndex++;
+                }
+                seq++;
             }
             XSSFRow finalIndexRow = sheet.createRow(finalIndexrow);
             finalcell = finalIndexRow.createCell(finalIndexcol);
@@ -79,6 +86,59 @@ public class ExcelService {
         finalRow = tempfinalIndex.intValue(); // 정수로 변환
 
         return finalRow;
+    }
+
+    public void validateInfoAlreadyExist(XSSFSheet sheet, String apiDate) {
+        List<Integer> startEndIndex = new ArrayList<>();
+        int startRowIndex = 0;
+        int startColIndex = 0;
+        int endRowIndex = 1;
+        int endColIndex = 0;
+        int valueOfStartCellIndex;
+        int valueOfEndCellIndex;
+
+        Double doubleTypeValueOfStartCellIndex;
+        Double doubleTypeValueOfEndCellIndex;
+
+        XSSFRow startrow = sheet.getRow(startRowIndex);
+        XSSFCell startCell = startrow.getCell(startColIndex);
+        XSSFRow endrow = sheet.getRow(endRowIndex);
+        XSSFCell endCell = endrow.getCell(endColIndex);
+
+        doubleTypeValueOfStartCellIndex = startCell.getNumericCellValue();
+        doubleTypeValueOfEndCellIndex = endCell.getNumericCellValue();
+
+        valueOfStartCellIndex = doubleTypeValueOfStartCellIndex.intValue();
+        valueOfEndCellIndex = doubleTypeValueOfEndCellIndex.intValue();
+
+        for(int i = valueOfStartCellIndex; i<=valueOfEndCellIndex; i++) {
+            if(i == valueOfEndCellIndex) {
+                break;
+            }
+            else if (i < valueOfEndCellIndex){
+                XSSFRow rowDate = sheet.getRow(i);
+                XSSFCell date = rowDate.getCell(0);
+                if(apiDate.equals(date.getRawValue())) {
+                    break;
+                }
+            } else {
+                break;
+            }
+        }
+
+        startEndIndex.add(valueOfStartCellIndex);
+        startEndIndex.add(valueOfEndCellIndex);
+
+        modifyEndIndex(sheet, startEndIndex);
+    }
+
+    public void modifyEndIndex(XSSFSheet sheet, List<Integer> startEndIndex) {
+        int endRowIndex = 1;
+        int endColIndex = 0;
+        XSSFRow endrow = sheet.getRow(endRowIndex);
+        XSSFCell endCell = endrow.getCell(endColIndex);
+
+        endCell.setCellValue(startEndIndex.get(1)+1);
     }
 
 }

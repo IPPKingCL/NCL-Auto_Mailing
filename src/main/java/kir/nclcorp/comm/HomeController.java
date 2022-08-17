@@ -48,28 +48,27 @@ public class HomeController {
 		WebScraping wc = new WebScraping();
 		sendMail calc = new sendMail(emailService);
 		Integer seq = 97;
+		List<Map<String,Integer>> dataList = new ArrayList<>();
 
 		List<Map<String,String>> list97 = wc.doScrape(date,"97");
 		List<Map<String,String>> list98 = wc.doScrape(date,"98");
 		List<Map<String,String>> list99 = wc.doScrape(date,"99");
 		List<Map<String,String>> list100 = wc.doScrape(date,"100");
 		List<Map<String,String>> list101 = wc.doScrape(date,"101");
-
 		Map<String, Integer> map97 = calc.calcCount(list97);
-		System.out.println(map97);
-		excelService.insertToExcel(map97, date, seq);
 		Map<String, Integer> map98 = calc.calcCount(list98);
-		System.out.println(map98);
-		excelService.insertToExcel(map98, date , seq+1);
 		Map<String, Integer> map99 = calc.calcCount(list99);
-		System.out.println(map99);
-		excelService.insertToExcel(map99, date , seq+2);
 		Map<String, Integer> map100 = calc.calcCount(list100);
-		System.out.println(map100);
-		excelService.insertToExcel(map100, date , seq+3);
 		Map<String, Integer> map101 = calc.calcCount(list101);
-		System.out.println(map101);
-		excelService.insertToExcel(map101, date , seq+4);
+		dataList.add(map97);
+		dataList.add(map98);
+		dataList.add(map99);
+		dataList.add(map100);
+		dataList.add(map101);
+
+		System.out.println(dataList);
+
+		excelService.insertToExcel(dataList,date,seq);
 
 		return "home";
 	}
