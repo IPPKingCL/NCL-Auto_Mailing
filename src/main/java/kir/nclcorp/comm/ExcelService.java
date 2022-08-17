@@ -20,7 +20,7 @@ import java.util.Map;
 @Service
 public class ExcelService {
 
-    public void insertToExcel(List<Map<String, Integer>> ApiData, String date, Integer seq) {
+    public String insertToExcel(List<Map<String, Integer>> ApiData, String date, Integer seq) {
         String filePath = "C:/Users/NCL-NT-0164/Desktop/TEST.xlsx";
         File excel = new File(filePath);
         XSSFSheet sheet;
@@ -28,21 +28,27 @@ public class ExcelService {
         int rowIndex;
         int finalIndexrow=0;
         int finalIndexcol=2;
-        List<Integer> startEndIndexList;
+        boolean isDateExist;
         XSSFCell cell0;
         XSSFCell cell1;
         XSSFCell cell2;
         XSSFCell cell3;
         XSSFCell cell4;
         XSSFCell finalcell;
+
         try {
             FileInputStream inputStream = new FileInputStream(filePath);
             XSSFWorkbook xssfWorkbook = new XSSFWorkbook(inputStream);
             sheet = xssfWorkbook.getSheet("rawdata");
             validSheet = xssfWorkbook.getSheet("Validation");
-//            validateInfoAlreadyExist(validSheet);
             rowIndex = findBlankRowIndex(sheet);
             XSSFRow row;
+
+            isDateExist = validateInfoAlreadyExist(validSheet,date);
+
+            if(isDateExist) {
+                return date;
+            }
 
             FileOutputStream fos = new FileOutputStream(filePath);
             for(int i = 0; i < ApiData.size(); i++) {
@@ -72,6 +78,8 @@ public class ExcelService {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+
+        return "success";
     }
 
     public Integer findBlankRowIndex(XSSFSheet sheet) { //엑셀 안에 있는 마지막 인덱스 번호를 불러와서 저장된 데이터 이후부터 다시 작성하도록 하는 함수
@@ -88,7 +96,7 @@ public class ExcelService {
         return finalRow;
     }
 
-    public void validateInfoAlreadyExist(XSSFSheet sheet, String apiDate) {
+    public boolean validateInfoAlreadyExist(XSSFSheet sheet, String apiDate) {
         List<Integer> startEndIndex = new ArrayList<>();
         int startRowIndex = 0;
         int startColIndex = 0;
@@ -112,32 +120,39 @@ public class ExcelService {
         valueOfEndCellIndex = doubleTypeValueOfEndCellIndex.intValue();
 
         for(int i = valueOfStartCellIndex; i<=valueOfEndCellIndex; i++) {
-            if(i == valueOfEndCellIndex) {
-                break;
+            if(valueOfStartCellIndex == valueOfEndCellIndex) {
+                startEndIndex.add(valueOfStartCellIndex);
+                startEndIndex.add(valueOfEndCellIndex);
+                modifyEndIndex(sheet, startEndIndex,apiDate);
+                return false;
             }
             else if (i < valueOfEndCellIndex){
                 XSSFRow rowDate = sheet.getRow(i);
                 XSSFCell date = rowDate.getCell(0);
-                if(apiDate.equals(date.getRawValue())) {
-                    break;
+                if(apiDate.equals(date.getStringCellValue())) {
+                    return true;
                 }
             } else {
                 break;
             }
         }
-
         startEndIndex.add(valueOfStartCellIndex);
         startEndIndex.add(valueOfEndCellIndex);
-
-        modifyEndIndex(sheet, startEndIndex);
+        modifyEndIndex(sheet, startEndIndex,apiDate);
+        return false;
     }
 
-    public void modifyEndIndex(XSSFSheet sheet, List<Integer> startEndIndex) {
+    public void modifyEndIndex(XSSFSheet sheet, List<Integer> startEndIndex, String apiDate) {
         int endRowIndex = 1;
         int endColIndex = 0;
+        int dateRowIndex = startEndIndex.get(1);
+        int dateColIndex = 0;
         XSSFRow endrow = sheet.getRow(endRowIndex);
         XSSFCell endCell = endrow.getCell(endColIndex);
+        XSSFRow dateRow = sheet.createRow(dateRowIndex);
+        XSSFCell dateCell = dateRow.createCell(dateColIndex);
 
+        dateCell.setCellValue(apiDate);
         endCell.setCellValue(startEndIndex.get(1)+1);
     }
 

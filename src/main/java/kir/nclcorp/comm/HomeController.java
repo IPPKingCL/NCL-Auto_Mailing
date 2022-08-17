@@ -44,11 +44,12 @@ public class HomeController {
 	}
 
 	@RequestMapping(value = "/excel/{date}", method = RequestMethod.GET)
-	public String scrapToExcel(@PathVariable("date") String date) {
+	public String scrapToExcel(Model model, @PathVariable("date") String date) {
 		WebScraping wc = new WebScraping();
 		sendMail calc = new sendMail(emailService);
 		Integer seq = 97;
 		List<Map<String,Integer>> dataList = new ArrayList<>();
+		String isSuccess;
 
 		List<Map<String,String>> list97 = wc.doScrape(date,"97");
 		List<Map<String,String>> list98 = wc.doScrape(date,"98");
@@ -68,7 +69,15 @@ public class HomeController {
 
 		System.out.println(dataList);
 
-		excelService.insertToExcel(dataList,date,seq);
+		isSuccess = excelService.insertToExcel(dataList,date,seq);
+
+		if(isSuccess.equals("success")) {
+//			model.addAttribute("성공","data가 정상적으로 입력되었습니다.");
+			System.out.println("성공적으로 데이터 입력되었습니다.");
+		}else {
+//			model.addAttribute("실패","해당 날짜는 이미 data가 등록되어 있습니다.");
+			System.out.println("이미 입력된 날짜의 데이터입니다.");
+		}
 
 		return "home";
 	}
