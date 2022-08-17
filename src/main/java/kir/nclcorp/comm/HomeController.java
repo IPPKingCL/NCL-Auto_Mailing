@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 @Controller
@@ -43,8 +44,13 @@ public class HomeController {
 		return "home";
 	}
 
-	@RequestMapping(value = "/excel/{date}", method = RequestMethod.GET)
-	public String scrapToExcel(Model model, @PathVariable("date") String date) {
+	@RequestMapping(value = "/excel", method = RequestMethod.GET)
+	public String inputDateForApiData() {
+		return "excel";
+	}
+
+	@RequestMapping(value = "/excel/date", method = RequestMethod.GET)
+	public String scrapToExcel(Model model, @RequestParam("date") String date) {
 		WebScraping wc = new WebScraping();
 		sendMail calc = new sendMail(emailService);
 		Integer seq = 97;
@@ -79,6 +85,6 @@ public class HomeController {
 			System.out.println("이미 입력된 날짜의 데이터입니다.");
 		}
 
-		return "home";
+		return "excel";
 	}
 }
