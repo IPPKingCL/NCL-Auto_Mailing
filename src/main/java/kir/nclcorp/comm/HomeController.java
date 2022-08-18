@@ -78,10 +78,10 @@ public class HomeController {
 		isSuccess = excelService.insertToExcel(dataList,date,seq);
 
 		if(isSuccess.equals("Success")) {
-//			model.addAttribute("성공","data가 정상적으로 입력되었습니다.");
+			model.addAttribute("inputData","data가 정상적으로 입력되었습니다.");
 			System.out.println("성공적으로 데이터 입력되었습니다.");
 		}else {
-//			model.addAttribute("실패","해당 날짜는 이미 data가 등록되어 있습니다.");
+			model.addAttribute("inputData","해당 날짜는 이미 data가 등록되어 있습니다.");
 			System.out.println("이미 입력된 날짜의 데이터입니다.");
 		}
 

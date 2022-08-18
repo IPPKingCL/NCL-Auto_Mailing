@@ -20,8 +20,9 @@
 
 
 <form action="http://localhost:8080/excel/date" method="GET">
-    <p>일정을 선택해주세요. <input type="text" id="datepicker" name="date"></p>
-    <input type="submit">
+    <p>일정을 선택해주세요. <input type="text" id="datepicker" name="date"><div><input type="submit"></div></p>
+    <p> <%=  request.getAttribute("inputData")%></p>
+
 </form>
 
 </body>
