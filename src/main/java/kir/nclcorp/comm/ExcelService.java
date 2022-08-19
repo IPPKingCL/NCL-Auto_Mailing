@@ -96,7 +96,7 @@ public class ExcelService {
         return finalRow;
     }
 
-    public boolean validateInfoAlreadyExist(XSSFSheet sheet, String apiDate) {
+    public boolean validateInfoAlreadyExist(XSSFSheet sheet, String apiDate) { // 데이터를 받아오는데 이미 존재하는 데이터라면 파일에 저장하지 않도록 하는 함수
         List<Integer> startEndIndex = new ArrayList<>();
         int startRowIndex = 0;
         int startColIndex = 0;

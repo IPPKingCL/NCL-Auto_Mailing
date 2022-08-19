@@ -28,10 +28,6 @@
 </body>
 
 <script>
-
-</script>
-
-<script>
     $(function () {
         //input을 datepicker로 선언
         $("#datepicker").datepicker({

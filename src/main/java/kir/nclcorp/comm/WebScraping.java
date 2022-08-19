@@ -55,6 +55,7 @@ public class WebScraping {
 
             list.add(map);
 
+
         }
         return list;
     }
