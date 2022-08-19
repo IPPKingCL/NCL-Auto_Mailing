@@ -24,10 +24,9 @@ public class WebScraping {
             System.out.println(e.getMessage());
         }
 
-        Elements elements1 = doc.select("tbody > tr > td > p >span");
         Elements elements2 = doc.select("tbody > tr > td > p >strong");
 
-        String[] arr = elements1.toString().split("<span>");
+        String[] arr = elements2.toString().split("<strong>");
 
         int lastLen = arr.length/16;
 
@@ -35,7 +34,7 @@ public class WebScraping {
 
         for(int i=0; i<lastLen; i++){
             Map<String,String> map = new HashMap<String,String>();
-
+            System.out.println(elements2.get((i*16)).text());
             map.put("센서시간",elements2.get((i*16)).text());
             map.put("등록시간",elements2.get((i*16)+1).text());
             map.put("PM10",elements2.get((i*16)+2).text());
