@@ -21,6 +21,7 @@ public class HomeController {
 	@Autowired
 	ExcelService excelService;
 
+	ServerLog log = ServerLog.instance;
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
 
