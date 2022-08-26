@@ -4,12 +4,15 @@ import java.text.DateFormat;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 @Controller
@@ -21,14 +24,14 @@ public class HomeController {
 	@Autowired
 	ExcelService excelService;
 
-	ServerLog log = ServerLog.instance;
+
+	//ServerLog log = ServerLog.instance;
+
+	ThreadPool tp = new ThreadPool();
+
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
 
-		Date date = new Date();
-		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
-		String formattedDate = dateFormat.format(date);
-		model.addAttribute("serverTime", formattedDate );
 
 		return "home";
 	}
@@ -87,5 +90,45 @@ public class HomeController {
 		}
 
 		return "excel";
+	}
+
+	@RequestMapping(value = "/makeThread", method = RequestMethod.POST)
+	public String makeThread(HttpServletRequest request, @RequestParam String name) {
+
+		NamedThread nt = new NamedThread(name);
+		nt.start();
+		tp.threadList.add(nt);
+
+		HashMap<String, String> temp = new HashMap<>();
+		temp.put("name",name);
+		temp.put("status","Alive");
+		tp.mapList.add(temp);
+
+		request.setAttribute("mapList", tp.mapList);
+
+		return "home";
+	}
+	@RequestMapping(value = "/stopThread", method = RequestMethod.GET)
+	public String stopThread(HttpServletRequest request, @RequestParam String name) {
+
+		for (NamedThread thread : tp.threadList) {
+			if (thread.name.equals(name)) {
+				thread.interrupt();
+				tp.threadList.remove(thread);
+
+				for (Map<String, String> map : tp.mapList) {
+					if (map.get("name").equals(name)) {
+						tp.mapList.remove(map);
+						break;
+					}
+				}
+				break;
+			}
+		}
+
+
+		request.setAttribute("mapList", tp.mapList);
+
+		return "home";
 	}
 }
