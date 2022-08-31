@@ -20,6 +20,9 @@ public class HomeController {
 
 	@Autowired
 	ExcelService excelService;
+	
+	@Autowired
+	ApiService apiService;
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
@@ -86,5 +89,26 @@ public class HomeController {
 		}
 
 		return "excel";
+	}
+
+	@RequestMapping(value = "/excel/location", method = RequestMethod.GET)
+	public String locationToExcel(String location) {
+		List<String> cityList = new ArrayList<String>();
+		cityList.add("서울");
+		cityList.add("인천");
+		cityList.add("강원");
+		cityList.add("충남");
+		cityList.add("대전");
+		cityList.add("부산");
+		cityList.add("울산");
+		cityList.add("충북");
+		cityList.add("제주");
+
+		for(int i=0; i<cityList.size(); i++) {
+			apiService.callAirkoreaAPI(cityList.get(i));
+		}
+
+
+		return "home";
 	}
 }

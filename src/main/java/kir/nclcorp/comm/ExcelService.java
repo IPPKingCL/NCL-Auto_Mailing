@@ -26,8 +26,8 @@ public class ExcelService {
         XSSFSheet sheet;
         XSSFSheet validSheet;
         int rowIndex;
-        int finalIndexrow=0;
-        int finalIndexcol=2;
+        int finalIndexrow = 0;
+        int finalIndexcol = 2;
         boolean isDateExist;
         XSSFCell cell0;
         XSSFCell cell1;
@@ -44,14 +44,14 @@ public class ExcelService {
             rowIndex = findBlankRowIndex(sheet);
             XSSFRow row;
 
-            isDateExist = validateInfoAlreadyExist(validSheet,date);
+            isDateExist = validateInfoAlreadyExist(validSheet, date);
 
-            if(isDateExist) {
+            if (isDateExist) {
                 return "Fail";
             }
 
             FileOutputStream fos = new FileOutputStream(filePath);
-            for(int i = 0; i < ApiData.size(); i++) {
+            for (int i = 0; i < ApiData.size(); i++) {
                 for (String key : ApiData.get(i).keySet()) {
                     row = sheet.createRow(rowIndex);
                     cell0 = row.createCell(0);
@@ -82,10 +82,70 @@ public class ExcelService {
         return "Success";
     }
 
+    public String locationInsertToExcel(List<AirKoreaEnvVO> airKoreaEnvVOList, String location) {
+        String filePath = "C:/Users/NCL-NT-0164/Desktop/측정소 상세 정보.xlsx";
+
+        File excel = new File(filePath);
+        XSSFSheet sheet;
+        XSSFSheet validSheet;
+
+        int rowIndex;
+        int finalIndexrow = 0;
+        int finalIndexcol = 0;
+        XSSFCell cell0;
+        XSSFCell cell1;
+        XSSFCell cell2;
+        XSSFCell cell3;
+        XSSFCell cell4;
+        XSSFCell cell5;
+        XSSFCell finalcell;
+
+        try {
+            FileInputStream inputStream = new FileInputStream(filePath);
+            XSSFWorkbook xssfWorkbook = new XSSFWorkbook(inputStream);
+            sheet = xssfWorkbook.getSheet("location_Info");
+            validSheet = xssfWorkbook.getSheet("index");
+            rowIndex = findBlankRowIndex(validSheet);
+            XSSFRow row;
+
+            FileOutputStream fos = new FileOutputStream(filePath);
+
+            for (AirKoreaEnvVO airKoreaEnvVO : airKoreaEnvVOList) {
+                row = sheet.createRow(rowIndex);
+                cell0 = row.createCell(0);
+                cell1 = row.createCell(1);
+                cell2 = row.createCell(2);
+                cell3 = row.createCell(3);
+                cell4 = row.createCell(4);
+                cell5 = row.createCell(5);// 셀 생성
+
+                cell0.setCellValue(location);
+                cell1.setCellValue(airKoreaEnvVO.getAddr());
+                cell2.setCellValue(airKoreaEnvVO.getMangName());
+                cell3.setCellValue(airKoreaEnvVO.getStationName());
+                cell4.setCellValue(airKoreaEnvVO.getDmX());
+                cell5.setCellValue(airKoreaEnvVO.getDmY()); // 생선된 셀에 값 입력
+                rowIndex++;
+            }
+
+
+            XSSFRow finalIndexRow = validSheet.createRow(finalIndexrow);
+            finalcell = finalIndexRow.createCell(finalIndexcol);
+            finalcell.setCellValue(rowIndex);
+            xssfWorkbook.write(fos); // 입력
+            fos.close();
+
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return "Success";
+    }
+
     public Integer findBlankRowIndex(XSSFSheet sheet) { //엑셀 안에 있는 마지막 인덱스 번호를 불러와서 저장된 데이터 이후부터 다시 작성하도록 하는 함수
         int finalRow;
         int rowIndex = 0; //마지막으로 작성한 셀의 행 인덱스
-        int colIndex = 2; // 마지막으로 작성한 셀의 열 인덱스
+        int colIndex = 0; // 마지막으로 작성한 셀의 열 인덱스
         Double tempfinalIndex;
         XSSFRow row = sheet.getRow(rowIndex);
         XSSFCell cell = row.getCell(colIndex);
@@ -119,17 +179,16 @@ public class ExcelService {
         valueOfStartCellIndex = doubleTypeValueOfStartCellIndex.intValue();
         valueOfEndCellIndex = doubleTypeValueOfEndCellIndex.intValue();
 
-        for(int i = valueOfStartCellIndex; i<=valueOfEndCellIndex; i++) {
-            if(valueOfStartCellIndex == valueOfEndCellIndex) {
+        for (int i = valueOfStartCellIndex; i <= valueOfEndCellIndex; i++) {
+            if (valueOfStartCellIndex == valueOfEndCellIndex) {
                 startEndIndex.add(valueOfStartCellIndex);
                 startEndIndex.add(valueOfEndCellIndex);
-                modifyEndIndex(sheet, startEndIndex,apiDate);
+                modifyEndIndex(sheet, startEndIndex, apiDate);
                 return false;
-            }
-            else if (i < valueOfEndCellIndex){
+            } else if (i < valueOfEndCellIndex) {
                 XSSFRow rowDate = sheet.getRow(i);
                 XSSFCell date = rowDate.getCell(0);
-                if(apiDate.equals(date.getStringCellValue())) {
+                if (apiDate.equals(date.getStringCellValue())) {
                     return true;
                 }
             } else {
@@ -138,7 +197,7 @@ public class ExcelService {
         }
         startEndIndex.add(valueOfStartCellIndex);
         startEndIndex.add(valueOfEndCellIndex);
-        modifyEndIndex(sheet, startEndIndex,apiDate);
+        modifyEndIndex(sheet, startEndIndex, apiDate);
         return false;
     }
 
@@ -153,7 +212,7 @@ public class ExcelService {
         XSSFCell dateCell = dateRow.createCell(dateColIndex);
 
         dateCell.setCellValue(apiDate);
-        endCell.setCellValue(startEndIndex.get(1)+1);
+        endCell.setCellValue(startEndIndex.get(1) + 1);
     }
 
 }
